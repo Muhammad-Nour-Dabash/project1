@@ -1,0 +1,17 @@
+# Material UI (UI components)
+npm install @mui/material @emotion/react @emotion/styled
+
+# React Router (routing)
+npm install react-router-dom
+
+# Supabase (auth & backend)
+npm install @supabase/supabase-js
+
+# Zustand (state management)
+npm install zustand
+
+# i18next (localization)
+npm install i18next react-i18next
+
+# Optional: icons for Material UI
+npm install @mui/icons-material
