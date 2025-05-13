@@ -55,7 +55,13 @@ const Dashboard = () => {
 
   // Sidebar drawer content (shown in both mobile & desktop)
   const drawer = (
-    <Box sx={{ height: "100%", display: "flex", flexDirection: "column" }}>
+    <Box
+      sx={{
+        height: "100%",
+        display: "flex",
+        flexDirection: "column",
+      }}
+    >
       {/* Spacer to align with AppBar on mobile */}
       {isMobile && <Toolbar />}
 
@@ -128,8 +134,8 @@ const Dashboard = () => {
       sx={{
         height: "90vh",
         display: "flex",
-        justifyContent: "start",
-        alignItems: "start",
+        justifyContent: location.pathname === "/" ? "center" : "start",
+        alignItems: location.pathname === "/" ? "center" : "start",
       }}
     >
       <CssBaseline />

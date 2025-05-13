@@ -16,3 +16,16 @@ export const deleteMemory = async (id: string) => {
   const { error } = await supabase.from("memories").delete().eq("id", id);
   return error;
 };
+
+export const createMemory = async (
+  data: { title: string; description: string },
+  userId: string
+) => {
+  const { error } = await supabase.from("memories").insert([
+    {
+      ...data,
+      user_id: userId, // ✅ Attach from AuthContext
+    },
+  ]);
+  return error;
+};

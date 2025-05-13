@@ -14,6 +14,8 @@ import MemoryCards from "../components/MemoryCards";
 import ConfirmDeleteDialog from "../components/ConfirmDeleteDialog";
 import { useState } from "react";
 import { deleteMemory } from "../services/memories";
+import { useMemoryFormStore } from "../store/memoriesStore";
+import MemoryForm from "../components/MemoryForm";
 
 const ListPage = () => {
   const theme = useTheme();
@@ -22,6 +24,8 @@ const ListPage = () => {
   const [deleteId, setDeleteId] = useState<string | null>(null);
   const [showDialog, setShowDialog] = useState(false);
   const [showSnackbar, setShowSnackbar] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState("");
+  const { openForm } = useMemoryFormStore();
 
   const handleDeleteRequest = (id: string) => {
     setDeleteId(id);
@@ -30,6 +34,7 @@ const ListPage = () => {
 
   return (
     <Box sx={{ mt: 4 }}>
+      <MemoryForm />
       {/* Header */}
       <Box
         sx={{
@@ -41,7 +46,11 @@ const ListPage = () => {
       >
         <Typography variant={isMobile ? "h6" : "h4"}>Your Memories</Typography>
         {!isMobile && (
-          <Button variant="contained" color="primary">
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={() => openForm("create")}
+          >
             + Create Memory
           </Button>
         )}
@@ -49,6 +58,7 @@ const ListPage = () => {
 
       {isMobile && (
         <Fab
+          onClick={() => openForm("create")}
           color="primary"
           sx={{ position: "fixed", bottom: 24, right: 24, zIndex: 1000 }}
         >
@@ -78,7 +88,10 @@ const ListPage = () => {
         onConfirm={() => {
           if (deleteId) {
             deleteMemory(deleteId).then((error) => {
-              if (!error) setShowSnackbar(true);
+              if (!error) {
+                setSnackbarMessage("Memory deleted successfully.");
+                setShowSnackbar(true);
+              }
               setDeleteId(null);
               setShowDialog(false);
             });
@@ -91,7 +104,7 @@ const ListPage = () => {
         open={showSnackbar}
         autoHideDuration={3000}
         onClose={() => setShowSnackbar(false)}
-        message="Memory deleted successfully"
+        message={snackbarMessage}
         anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
       />
     </Box>
