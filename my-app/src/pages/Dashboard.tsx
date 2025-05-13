@@ -124,7 +124,14 @@ const Dashboard = () => {
   );
 
   return (
-    <Box sx={{ display: "flex" }}>
+    <Box
+      sx={{
+        height: "90vh",
+        display: "flex",
+        justifyContent: "start",
+        alignItems: "start",
+      }}
+    >
       <CssBaseline />
 
       {/* AppBar for mobile screens only */}
@@ -182,20 +189,7 @@ const Dashboard = () => {
       </Box>
 
       {/* Main page content */}
-      <Box
-        component="main"
-        sx={{
-          flexGrow: 1,
-          p: 3,
-          width: { md: `calc(100% - ${drawerWidth}px)` },
-        }}
-      >
-        <Toolbar /> {/* Ensures content is below AppBar */}
-        <Typography variant="h5" gutterBottom>
-          Dashboard Content
-        </Typography>
-        <Outlet />
-      </Box>
+      <Outlet />
     </Box>
   );
 };
