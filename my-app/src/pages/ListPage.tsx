@@ -16,6 +16,7 @@ import { useState } from "react";
 import { deleteMemory } from "../services/memories";
 import { useMemoryFormStore } from "../store/memoriesStore";
 import MemoryForm from "../components/MemoryForm";
+import { useTranslation } from "react-i18next";
 
 const ListPage = () => {
   const theme = useTheme();
@@ -31,6 +32,7 @@ const ListPage = () => {
     setDeleteId(id);
     setShowDialog(true);
   };
+  const { t } = useTranslation();
 
   return (
     <Box sx={{ mt: 4 }}>
@@ -44,14 +46,16 @@ const ListPage = () => {
           mb: 2,
         }}
       >
-        <Typography variant={isMobile ? "h6" : "h4"}>Your Memories</Typography>
+        <Typography variant={isMobile ? "h6" : "h4"}>
+          {t("your-memories")}
+        </Typography>
         {!isMobile && (
           <Button
             variant="contained"
             color="primary"
             onClick={() => openForm("create")}
           >
-            + Create Memory
+            + {t("create-memory")}
           </Button>
         )}
       </Box>
@@ -89,7 +93,7 @@ const ListPage = () => {
           if (deleteId) {
             deleteMemory(deleteId).then((error) => {
               if (!error) {
-                setSnackbarMessage("Memory deleted successfully.");
+                setSnackbarMessage(t("memory-deleted-successfully"));
                 setShowSnackbar(true);
               }
               setDeleteId(null);

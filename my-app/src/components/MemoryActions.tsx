@@ -2,6 +2,7 @@ import { IconButton, Tooltip } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { useMemoryFormStore } from "../store/memoriesStore";
+import { useTranslation } from "react-i18next";
 
 interface Props {
   id: string;
@@ -10,10 +11,10 @@ interface Props {
 
 const MemoryActions = ({ id, onDeleteRequest }: Props) => {
   const { openForm } = useMemoryFormStore(); // ✅ Zustand state
-
+  const { t } = useTranslation();
   return (
     <>
-      <Tooltip title="Edit">
+      <Tooltip title={t("edit")}>
         <IconButton
           color="primary"
           size="small"
@@ -23,7 +24,7 @@ const MemoryActions = ({ id, onDeleteRequest }: Props) => {
         </IconButton>
       </Tooltip>
 
-      <Tooltip title="Delete">
+      <Tooltip title={t("delete")}>
         <IconButton
           color="error"
           size="small"

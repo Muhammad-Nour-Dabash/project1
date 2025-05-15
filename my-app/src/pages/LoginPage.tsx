@@ -2,8 +2,9 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import supabase from "../services/supabaseClient";
-import { TextField, Button, Typography, Box } from "@mui/material";
+import { TextField, Button, Typography, Box, Snackbar } from "@mui/material";
 import { useAuth } from "../context/AuthContext";
+import { useTranslation } from "react-i18next";
 
 const LoginPage = () => {
   const [email, setEmail] = useState("");
@@ -11,6 +12,9 @@ const LoginPage = () => {
   const [isSignup, setIsSignup] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
+  const [showSnackbar, setShowSnackbar] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState("");
+  const { t } = useTranslation();
 
   const { user, loading } = useAuth();
 
@@ -25,7 +29,7 @@ const LoginPage = () => {
     setError(null);
 
     if (isSignup) {
-      const { data, error } = await supabase.auth.signUp({
+      const { error } = await supabase.auth.signUp({
         email,
         password,
       });
@@ -35,8 +39,8 @@ const LoginPage = () => {
         return;
       }
 
-      // Do NOT log them in. Just show confirmation message
-      alert("Check your email to confirm your account before logging in.");
+      setSnackbarMessage(t("confirm-email-hint"));
+      setShowSnackbar(true);
       return;
     }
 
@@ -49,9 +53,7 @@ const LoginPage = () => {
     if (loginError) {
       // If email not confirmed, show resend option
       if (loginError.message.toLowerCase().includes("email not confirmed")) {
-        setError(
-          "Email not confirmed. Please check your inbox or resend confirmation."
-        );
+        setError("email-not-confirmed-message");
       } else {
         setError(loginError.message);
       }
@@ -67,13 +69,13 @@ const LoginPage = () => {
     <>
       <Box sx={{ maxWidth: 400, mx: "auto", mt: 8 }}>
         <Typography variant="h5" gutterBottom>
-          {isSignup ? "Sign Up" : "Log In"}
+          {isSignup ? t("sign-up") : t("log-in")}
         </Typography>
 
         <form onSubmit={handleSubmit}>
           <TextField
             fullWidth
-            label="Email"
+            label={t("email")}
             type="email"
             margin="normal"
             value={email}
@@ -82,7 +84,7 @@ const LoginPage = () => {
           />
           <TextField
             fullWidth
-            label="Password"
+            label={t("password")}
             type="password"
             margin="normal"
             value={password}
@@ -92,7 +94,7 @@ const LoginPage = () => {
 
           {error && (
             <Typography color="error" variant="body2" sx={{ mt: 1 }}>
-              {error}
+              {t(error)}
             </Typography>
           )}
 
@@ -102,7 +104,7 @@ const LoginPage = () => {
             type="submit"
             sx={{ mt: 2, mb: 1 }}
           >
-            {isSignup ? "Create Account" : "Login"}
+            {isSignup ? t("create-account") : t("log-in")}
           </Button>
 
           <Button
@@ -111,8 +113,8 @@ const LoginPage = () => {
             onClick={() => setIsSignup(!isSignup)}
           >
             {isSignup
-              ? "Already have an account? Log In"
-              : "Don't have an account? Sign Up"}
+              ? t("already-have-an-account?-log-in")
+              : t("don't-have-an-account?-sign-up")}
           </Button>
           {error?.includes("not confirmed") && (
             <Button
@@ -131,10 +133,18 @@ const LoginPage = () => {
               }}
               sx={{ mt: 1 }}
             >
-              Resend Confirmation Email
+              {t("resend-confirmation-email")}
             </Button>
           )}
         </form>
+        {/* Snackbar */}
+        <Snackbar
+          open={showSnackbar}
+          autoHideDuration={3000}
+          onClose={() => setShowSnackbar(false)}
+          message={snackbarMessage}
+          anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+        />
       </Box>
     </>
   );

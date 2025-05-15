@@ -5,13 +5,19 @@
 //   DialogActions,
 //   Button,
 //   TextField,
+//   CircularProgress,
 // } from "@mui/material";
 // import { useForm } from "react-hook-form";
 // import { z } from "zod";
 // import { zodResolver } from "@hookform/resolvers/zod";
 // import { useMemoryFormStore } from "../store/memoriesStore";
-// import { createMemory } from "../services/memories";
+// import {
+//   createMemory,
+//   getMemoryById,
+//   updateMemory,
+// } from "../services/memories";
 // import { useAuth } from "../context/AuthContext";
+// import { useEffect, useState } from "react";
 
 // const schema = z.object({
 //   title: z
@@ -27,8 +33,9 @@
 // type FormData = z.infer<typeof schema>;
 
 // const MemoryForm = () => {
-//   const { isOpen, closeForm } = useMemoryFormStore();
+//   const { isOpen, mode, selectedId, closeForm } = useMemoryFormStore();
 //   const { user } = useAuth();
+//   const [loadingMemory, setLoadingMemory] = useState(false);
 
 //   const {
 //     register,
@@ -41,10 +48,28 @@
 //     mode: "onChange",
 //   });
 
+//   // Load memory when editing
+//   useEffect(() => {
+//     if (mode === "edit" && selectedId) {
+//       setLoadingMemory(true);
+//       getMemoryById(selectedId)
+//         .then(({ data }) => {
+//           if (data) reset(data);
+//         })
+//         .finally(() => setLoadingMemory(false));
+//     } else {
+//       reset({ title: "", description: "" });
+//     }
+//   }, [mode, selectedId, reset]);
+
 //   const onSubmit = async (data: FormData) => {
 //     if (!user) return;
 
-//     const error = await createMemory(data, user.id);
+//     const error =
+//       mode === "edit" && selectedId
+//         ? await updateMemory(selectedId, data)
+//         : await createMemory(data, user.id);
+
 //     if (!error) {
 //       closeForm();
 //       reset();
@@ -53,29 +78,35 @@
 
 //   return (
 //     <Dialog open={isOpen} onClose={closeForm} fullWidth maxWidth="sm">
-//       <DialogTitle>Create Memory</DialogTitle>
+//       <DialogTitle>
+//         {mode === "edit" ? "Edit Memory" : "Create Memory"}
+//       </DialogTitle>
 //       <DialogContent>
-//         <form id="memory-form" onSubmit={handleSubmit(onSubmit)}>
-//           <TextField
-//             label="Title"
-//             fullWidth
-//             margin="normal"
-//             {...register("title")}
-//             error={!!errors.title}
-//             helperText={errors.title?.message}
-//           />
+//         {loadingMemory ? (
+//           <CircularProgress sx={{ m: 2 }} />
+//         ) : (
+//           <form id="memory-form" onSubmit={handleSubmit(onSubmit)}>
+//             <TextField
+//               label="Title"
+//               fullWidth
+//               margin="normal"
+//               {...register("title")}
+//               error={!!errors.title}
+//               helperText={errors.title?.message}
+//             />
 
-//           <TextField
-//             label="Description"
-//             fullWidth
-//             margin="normal"
-//             multiline
-//             rows={3}
-//             {...register("description")}
-//             error={!!errors.description}
-//             helperText={errors.description?.message}
-//           />
-//         </form>
+//             <TextField
+//               label="Description"
+//               fullWidth
+//               margin="normal"
+//               multiline
+//               rows={3}
+//               {...register("description")}
+//               error={!!errors.description}
+//               helperText={errors.description?.message}
+//             />
+//           </form>
+//         )}
 //       </DialogContent>
 //       <DialogActions>
 //         <Button onClick={closeForm}>Cancel</Button>
@@ -83,9 +114,9 @@
 //           form="memory-form"
 //           type="submit"
 //           variant="contained"
-//           disabled={isSubmitting || !isValid}
+//           disabled={isSubmitting || !isValid || loadingMemory}
 //         >
-//           Create
+//           {mode === "edit" ? "Update" : "Create"}
 //         </Button>
 //       </DialogActions>
 //     </Dialog>
@@ -109,30 +140,25 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useMemoryFormStore } from "../store/memoriesStore";
 import {
   createMemory,
-  getMemoryById,
   updateMemory,
+  getMemoryById,
 } from "../services/memories";
 import { useAuth } from "../context/AuthContext";
 import { useEffect, useState } from "react";
-import supabase from "../services/supabaseClient";
-
-const schema = z.object({
-  title: z
-    .string()
-    .min(3, "Title must be at least 3 characters")
-    .max(100, "Title must be at most 100 characters"),
-  description: z
-    .string()
-    .min(1, "Description must be at least 1 character")
-    .max(1000, "Description must be at most 1000 characters"),
-});
-
-type FormData = z.infer<typeof schema>;
+import { useTranslation } from "react-i18next";
 
 const MemoryForm = () => {
+  const { t } = useTranslation();
   const { isOpen, mode, selectedId, closeForm } = useMemoryFormStore();
   const { user } = useAuth();
   const [loadingMemory, setLoadingMemory] = useState(false);
+
+  const schema = z.object({
+    title: z.string().min(3, t("title-required")).max(100, t("title-max")),
+    description: z.string().min(1, t("desc-required")).max(1000, t("desc-max")),
+  });
+
+  type FormData = z.infer<typeof schema>;
 
   const {
     register,
@@ -176,7 +202,7 @@ const MemoryForm = () => {
   return (
     <Dialog open={isOpen} onClose={closeForm} fullWidth maxWidth="sm">
       <DialogTitle>
-        {mode === "edit" ? "Edit Memory" : "Create Memory"}
+        {mode === "edit" ? t("edit-memory") : t("create-memory")}
       </DialogTitle>
       <DialogContent>
         {loadingMemory ? (
@@ -184,7 +210,7 @@ const MemoryForm = () => {
         ) : (
           <form id="memory-form" onSubmit={handleSubmit(onSubmit)}>
             <TextField
-              label="Title"
+              label={t("title")}
               fullWidth
               margin="normal"
               {...register("title")}
@@ -193,7 +219,7 @@ const MemoryForm = () => {
             />
 
             <TextField
-              label="Description"
+              label={t("description")}
               fullWidth
               margin="normal"
               multiline
@@ -206,14 +232,14 @@ const MemoryForm = () => {
         )}
       </DialogContent>
       <DialogActions>
-        <Button onClick={closeForm}>Cancel</Button>
+        <Button onClick={closeForm}>{t("cancel")}</Button>
         <Button
           form="memory-form"
           type="submit"
           variant="contained"
           disabled={isSubmitting || !isValid || loadingMemory}
         >
-          {mode === "edit" ? "Update" : "Create"}
+          {mode === "edit" ? t("update") : t("create")}
         </Button>
       </DialogActions>
     </Dialog>

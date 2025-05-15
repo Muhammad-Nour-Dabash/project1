@@ -17,12 +17,15 @@ import {
   useTheme,
   useMediaQuery,
   Tooltip,
+  Select,
+  MenuItem,
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import LogoutButton from "../components/Logout";
 import MemoryIcon from "@mui/icons-material/Memory";
 import { useAuth } from "../context/AuthContext";
 import { Home } from "@mui/icons-material";
+import { useTranslation } from "react-i18next";
 
 const drawerWidth = 240;
 
@@ -30,7 +33,7 @@ const Dashboard = () => {
   const location = useLocation();
   const { user } = useAuth();
   const userEmail = user?.email;
-
+  const { i18n, t } = useTranslation();
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -42,12 +45,12 @@ const Dashboard = () => {
   // Navigation items for the drawer
   const navItems = [
     {
-      label: "Home",
+      label: t("home"),
       path: "/",
       icon: <Home />,
     },
     {
-      label: "Memories",
+      label: t("memories"),
       path: "/list",
       icon: <MemoryIcon />,
     },
@@ -123,6 +126,18 @@ const Dashboard = () => {
       <Box sx={{ flexGrow: 1 }} />
       <Box sx={{ mb: 1 }}>
         <Box textAlign="center">
+          <Box sx={{ mx: 2, mb: 2 }}>
+            <Select
+              value={i18n.language}
+              onChange={(e) => i18n.changeLanguage(e.target.value)}
+              fullWidth
+              size="small"
+            >
+              <MenuItem value="en">English</MenuItem>
+              <MenuItem value="ar">العربية</MenuItem>
+            </Select>
+          </Box>
+
           <LogoutButton />
         </Box>
       </Box>

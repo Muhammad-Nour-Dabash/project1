@@ -6,6 +6,7 @@ import {
   DialogActions,
   Button,
 } from "@mui/material";
+import { useTranslation } from "react-i18next";
 
 interface Props {
   open: boolean;
@@ -14,19 +15,17 @@ interface Props {
 }
 
 const ConfirmDeleteDialog = ({ open, onClose, onConfirm }: Props) => {
+  const { t } = useTranslation();
   return (
     <Dialog open={open} onClose={onClose}>
-      <DialogTitle>Confirm Delete</DialogTitle>
+      <DialogTitle>{t("confirm-delete")}</DialogTitle>
       <DialogContent>
-        <DialogContentText>
-          Are you sure you want to delete this memory? This action cannot be
-          undone.
-        </DialogContentText>
+        <DialogContentText>{t("delete-confirm-message")}</DialogContentText>
       </DialogContent>
       <DialogActions>
-        <Button onClick={onClose}>Cancel</Button>
+        <Button onClick={onClose}>{t("cancel")}</Button>
         <Button onClick={onConfirm} color="error" variant="contained">
-          Delete
+          {t("delete")}
         </Button>
       </DialogActions>
     </Dialog>

@@ -1,0 +1,101 @@
+import i18n from "i18next";
+import { initReactI18next } from "react-i18next";
+import LanguageDetector from "i18next-browser-languagedetector";
+
+i18n
+  .use(LanguageDetector) // detects from localStorage, browser, etc.
+  .use(initReactI18next)
+  .init({
+    fallbackLng: "en",
+    supportedLngs: ["en", "ar"],
+    detection: {
+      order: ["localStorage", "navigator"],
+      caches: ["localStorage"],
+    },
+    resources: {
+      en: {
+        translation: {
+          home: "Home",
+          memories: "Memories",
+          dashboard: "Dashboard",
+          logout: "Logout",
+          language: "Language",
+          "your-memories": "Your Memories",
+          "create-memory": "Create Memory",
+          "edit-memory": "Edit Memory",
+          "delete-confirm-message": "Are you sure you want to delete this memory? This action cannot be undone.",
+          title: "Title",
+          description: "Description",
+          "created-at": "Created At",
+          actions: "Actions",
+          edit: "Edit",
+          delete: "Delete",
+          "no-memories-found": "No memories found",
+          "confirm-delete": "Confirm Delete",
+          cancel: "Cancel",
+          "confirm-email-hint":"Check your email to confirm your account before logging in",
+          email: "Email",
+          "sign-up": "Sign Up",
+          "log-in": "Log In",
+          "create-account": "Create Account",
+          "resend-confirmation-email": "Resend Confirmation Email",
+          "don't-have-an-account?-sign-up": "Don't have an account? Sign Up",
+          "already-have-an-account?-log-in":"Already have an account? Log In",
+          "Invalid login credentials": "Invalid login credentials",
+          "email-not-confirmed-message": "Email not confirmed. Please check your inbox or resend confirmation.",
+          "memory-deleted-successfully": "Memory deleted successfully",
+          create: "Create",
+          "title-required": "Title is required",
+          "title-max": "Title must be at most 100 characters",
+          "desc-required": "Description is required",
+          "desc-max": "Description must be at most 1000 characters",
+          update: "Update",
+        },
+      },
+      ar: {
+        translation: {
+          home: "الرئيسية",
+          memories: "الذكريات",
+          dashboard: "لوحة التحكم",
+          logout: "تسجيل الخروج",
+          language: "اللغة",
+          "your-memories": "ذكرياتك",
+          "create-memory": "إنشاء ذكرى",
+          "edit-memory": "تعديل ذكرى",
+          "delete-confirm-message": "هل أنت متاكد من حذف هذه الذكرى؟ لا يمكن التراجع عن هذا.",
+          title: "العنوان",
+          description: "الوصف",
+          "created-at": "تم الإنشاء في",
+          actions: "الإجراءات",
+          edit: "تعديل",
+          delete: "حذف",
+          "no-memories-found": "لم يتم العثور على ذكريات",
+          "confirm-delete": "تأكيد الحذف",
+          cancel: "إلغاء",
+          "confirm-email-hint":"يرجى التحقق من بريدك الإلكتروني لتأكيد حسابك قبل تسجيل الدخول",
+          email: "البريد الإلكتروني",
+          "sign-up": "إنشاء حساب",
+          "log-in": "تسجيل دخول",
+          "password": "كلمة المرور",
+          "create-account": "إنشاء حساب",
+          "resend-confirmation-email": "أرسل بريد التأكيد مرة أخرى",
+          "don't-have-an-account?-sign-up": "ليس لديك حساب؟ إنشاء حساب",
+          "already-have-an-account?-log-in":"لديك حساب بالفعل؟ تسجيل دخول",
+          "Invalid login credentials": "بيانات تسجيل الدخول غير صحيحة",
+          "email-not-confirmed-message": "البريد الإلكتروني غير موثق. يرجى التحقق من صندوق البريد الخاص بك أو أرسل بريد التأكيد مرة أخرى",
+          "memory-deleted-successfully": "تم حذف الذكرى بنجاح",
+          create: "إنشاء",
+             "title-required": "Title is required",
+          "title-max": "Title must be at most 100 characters",
+          "desc-required": "Description is required",
+          "desc-max": "Description must be at most 1000 characters",
+          update: "تعديل",
+        },
+      },
+    },
+    interpolation: {
+      escapeValue: false, // react already escapes
+    },
+  });
+
+export default i18n;
