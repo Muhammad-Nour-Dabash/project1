@@ -29,3 +29,21 @@ export const createMemory = async (
   ]);
   return error;
 };
+
+export const updateMemory = async (
+  id: string,
+  data: { title: string; description: string }
+) => {
+  const { error } = await supabase.from("memories").update(data).eq("id", id);
+  return error;
+};
+
+export const getMemoryById = async (id: string) => {
+  const { data, error } = await supabase
+    .from("memories")
+    .select("title, description")
+    .eq("id", id)
+    .single();
+
+  return { data, error };
+};
