@@ -16,5 +16,8 @@ npm install i18next react-i18next i18next-browser-languagedetector
 # Optional: icons for Material UI
 npm install @mui/icons-material
 
+# Create app with vite
+npm create vite@latest my-app -- --template react-ts
+
 # For start
 npm run dev 
