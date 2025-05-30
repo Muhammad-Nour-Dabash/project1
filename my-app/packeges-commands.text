@@ -15,3 +15,6 @@ npm install i18next react-i18next i18next-browser-languagedetector
 
 # Optional: icons for Material UI
 npm install @mui/icons-material
+
+# For start
+npm run dev 
